@@ -1,0 +1,10 @@
+prefix=/Users/showandtell/Downloads/Multidimensional_Numerical_Integration/gsl-1.14/../lib
+exec_prefix=/Users/showandtell/Downloads/Multidimensional_Numerical_Integration/gsl-1.14/../lib
+libdir=/Users/showandtell/Downloads/Multidimensional_Numerical_Integration/gsl-1.14/../lib/lib
+includedir=/Users/showandtell/Downloads/Multidimensional_Numerical_Integration/gsl-1.14/../lib/include
+
+Name: GSL
+Description: GNU Scientific Library
+Version: 1.14
+Libs: -L/Users/showandtell/Downloads/Multidimensional_Numerical_Integration/gsl-1.14/../lib/lib -lgsl -lgslcblas -lm 
+Cflags: -I/Users/showandtell/Downloads/Multidimensional_Numerical_Integration/gsl-1.14/../lib/include

@@ -112,7 +112,7 @@ int main (void)
 {
 	double res, err;
   
-#define DIM 10   
+	#define DIM 10   
 	//double xl[DIM] = { 1, -2, 3, -2, 4, -6, 2, -1, 2, -3 }; /**/
         //double xu[DIM] = { 1.2, 2.2, 3.5, 2.2, 4.5, 6.7, 2.3, 1.2, 2.6, 4}; /**/
 
@@ -129,7 +129,6 @@ int main (void)
 
 
 		local_kernel[i][10] = average[i];
-
 	}
 
 
@@ -154,6 +153,7 @@ int main (void)
 					&res, &err);
 			gsl_monte_plain_free (s);
 
+			
 			display_results ("plain", res, err);
 		}
 

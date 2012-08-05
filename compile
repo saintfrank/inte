@@ -1,5 +1,5 @@
 g++ -o integrale integrale.c  -I gsl-1.14 -lgsl -lgslcblas -pg
 
-#gcc -o vector vector.c  -I gsl-1.14 lib/lib/libgsl.a -pg
+g++ -o normale normale.c  -I gsl-1.14 lib/lib/libgsl.a -lgslcblas -pg
 
 #gcc -o Gauss10D Gauss10D.c  -I gsl-1.14 lib/lib/libgsl.a -pg

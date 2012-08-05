@@ -7,21 +7,14 @@
 #include <gsl/gsl_blas.h>   
 
 double average[5] = { 26.23,-618.97,24.06,	-130.18,-6.27 };	
-double average2[5] = { 26.23,-618.97,24.06,	-130.18,-6.27 };	
 
-double kernel[5][10] = { 
-	2.32e-04, -9.71e-01, 2.01e-03, 2.16e+00, -3.70e-03, -1.19e+00, -1.13e-02, 4.67e-02, -5.00e-02, 1.40e-02, 
-	1.57e-02, -1.35e-02, 2.88e-02, 3.69e-02, -8.21e-02, -2.39e-02, 5.25e-01, -1.24e+00, 1.08e+00, -2.74e-01, 
-	2.55e-01, -4.00e-04, -7.32e-01, 2.24e-03, 5.44e-01, -3.81e-03, -2.19e-01, 4.34e-02, 1.88e-01, -9.90e-02, 
-	-1.23e-01, 7.70e-03, 2.59e-01, 2.72e-03, -6.36e-02, -9.17e-03, -5.60e-01, 2.63e-01, 4.87e-01, -3.04e-01, 
-	-2.42e-01, -1.10e-02, 9.81e-02, 1.85e-03, 2.54e-01, 1.10e-02, -1.10e-01, -1.38e-01, -5.20e-02, 1.28e-01};
 	
- double kernel_vec[50] = { 
-	2.32e-04, -9.71e-01, 2.01e-03, 2.16e+00, -3.70e-03, -1.19e+00, -1.13e-02, 4.67e-02, -5.00e-02, 1.40e-02, 
-	1.57e-02, -1.35e-02, 2.88e-02, 3.69e-02, -8.21e-02, -2.39e-02, 5.25e-01, -1.24e+00, 1.08e+00, -2.74e-01, 
-	2.55e-01, -4.00e-04, -7.32e-01, 2.24e-03, 5.44e-01, -3.81e-03, -2.19e-01, 4.34e-02, 1.88e-01, -9.90e-02, 
-	-1.23e-01, 7.70e-03, 2.59e-01, 2.72e-03, -6.36e-02, -9.17e-03, -5.60e-01, 2.63e-01, 4.87e-01, -3.04e-01, 
-	-2.42e-01, -1.10e-02, 9.81e-02, 1.85e-03, 2.54e-01, 1.10e-02, -1.10e-01, -1.38e-01, -5.20e-02, 1.28e-01};
+ double kernel_vec[5] = { 
+2.32e-04, -9.71e-01, 2.01e-03, 2.16e+00, -3.70e-03, -1.19e+00, -1.13e-02, 4.67e-02, -5.00e-02, 1.40e-02,
+1.57e-02, -1.35e-02, 2.88e-02, 3.69e-02, -8.21e-02, -2.39e-02, 5.25e-01, -1.24e+00, 1.08e+00, -2.74e-01,
+2.55e-01, -4.00e-04, -7.32e-01, 2.24e-03, 5.44e-01, -3.81e-03, -2.19e-01, 4.34e-02, 1.88e-01, -9.90e-02,
+-1.23e-01, 7.70e-03, 2.59e-01, 2.72e-03, -6.36e-02, -9.17e-03, -5.60e-01, 2.63e-01, 4.87e-01, -3.04e-01,
+-2.42e-01, -1.10e-02, 9.81e-02, 1.85e-03, 2.54e-01, 1.10e-02, -1.10e-01, -1.38e-01, -5.20e-02, 1.28e-01};
 
 
 double myx[10] = {182.399702,  115.236628,  215.728292,  112.966393,  64.668668,  126.782378,  157.386171,  60.721202,  729.187580,  606.042635};
@@ -38,121 +31,36 @@ void print_k( float * avg, float ** local_kernel );
 double chi2f (double *x, size_t dim, void *params){
 
 	double chi2 = 0;
-	double mychi2 = 0;
 
-	A = gsl_matrix_view_array(kernel_vec, 5, 10); 
-	B = gsl_vector_view_array(average, 5); 
+	A = gsl_matrix_view_array(kernel_vec, 5, 10);
+	double v[5]= {average[0],average[1],average[2],average[3],average[4]};
+	gsl_vector_view B = gsl_vector_view_array(v, 5);
+	//gsl_vector_view C = gsl_vector_view_array(average, 5);
+	//gsl_vector * B =  gsl_vector_calloc ( 5 );
+	//gsl_vector_memcpy ( B, &C.vector);
 
 	gsl_vector_view X = gsl_vector_view_array(x, 10); 
 	
-	gsl_blas_dgemv ( CblasNoTrans, 1, & A.matrix, & X.vector , 1, & B.vector );
+	gsl_blas_dgemv ( CblasNoTrans, 1, & A.matrix, & X.vector , 1, &B.vector );
 
-	/*printf("%s " , "x : ");
-	for(int j=0; j<ncoords; j++) { 
-		printf("%f " , x[j]);
-	} 
-	printf("\n" );*/
 
 	for( int i = 0 ;i<nconstr;i++)
 	{
 		double temp = gsl_vector_get ( &B.vector, i);
-		mychi2 += temp * temp;
+		chi2 += temp * temp;
 	}
-
-	// calcolo
-	for( int i = 0 ; i < nconstr ; i++ )
-	{
-		double s = average2[i];
-		printf("Inizio : %f\n", average2[i] );
-		for(int j=0 ; j < ncoords ; j++) { 
-			printf("prima = %f \n", s);
-			s += kernel[i][j]*x[j];
-			printf("%f * %f = %f \n", kernel[i][j] , x[j], s);
-		} 
-		printf("%s %f\n", "s : " , s);
-		chi2 += s*s;
-	}   
-
-	printf("%s %f %s %f %s %f\n", "gsl", mychi2 , "normale", chi2, "diff" , mychi2-chi2);
+//gsl_vector_free (B);
+	//printf("%s %f ", "chi2f", mychi2 );
 
 	return chi2;
 }
-/*
-double chi2f (double *x, size_t dim, void *params){
-
-	double chi2 = 0;
-
-	float ** mykernel = (float **) params;
-
-	for( int i = 0 ;i<nconstr;++i)
-	{
-		double s = mykernel[i][10];
-		for(int j=0;j<ncoords;++j) { 
-			s += mykernel[i][j]*x[j];
-		} 
-		chi2 += s*s;
-	}   
-
-	return chi2;
-}*/
 
 double expChi2f (double *x, size_t dim, void *params){
 
-	//printf("%s %f\n", "exp", exp(-chi2f(x, dim, params)/2 ));
-	//return chi2f(x, dim, params);
 	return exp(-chi2f(x, dim, params)/2);
-	//return 1 ; 
 }
 
-/*
-double
-g (double *k, size_t dim, void *params)
-{
-  int i, j;
-
-  double scalar_product=0;
-  for (i=0; i<dim; i++)
-    for (j=0; j<dim; j++) {
-      scalar_product += k[i]*k[j]*(i*dim*1.5+j+1.2)*0.01; // use (i*dim*0.3+j) as matrix element
-    }
-  //  printf("scalar prod. = %f", (float) scalar_product); 
-  return exp(-scalar_product);
-}
-*/     
-/*
-void print_k( float * avg, float ** local_kernel ){
-
-	cout << "\n\n********** kaverage[" << nconstr << "]: ";
-
-	for(int i=0;i<nconstr;++i){
-
-		cout << std::setprecision (2)  << avg[i] << "\t";
-
-	}
-
-	std::cout << std::endl;
-
-	cout << "\n\n********** kernel["<< nconstr << "][" << ncoords << "] " << ": " << endl;
-
-	for(int i=0;i<nconstr;++i){
-
-		for(int j=0;j<ncoords;++j) {
-
-			std::cout << std::setprecision (2) << kernel[i][j] << "\t";
-
-		}
-
-		std::cout << std::endl;
-	}
-
-}
-*/
-
-
-
-
-
-     
+    
 void
 display_results (const char *title, double result, double error)
 {
@@ -168,42 +76,17 @@ int main (void)
 	double res, err;
   
 	#define DIM 10   
-	//double xl[DIM] = { 1, -2, 3, -2, 4, -6, 2, -1, 2, -3 }; /**/
-        //double xu[DIM] = { 1.2, 2.2, 3.5, 2.2, 4.5, 6.7, 2.3, 1.2, 2.6, 4}; /**/
+	
 	double xl[DIM] = { 168,  108,192, 108, 48, 108, 140, 60,720, 600};
 	double xu[DIM] = { 192, 144, 216, 144, 72, 144, 160, 80, 740, 620}; /**/
 	
 	A = gsl_matrix_view_array(kernel_vec, 5, 10); 
 	B = gsl_vector_view_array(average, 5); 
-	for(int i = 0 ; i < 5 ; i++)
-	{
-		printf("\n");
-		for (int j=0; j < 10 ; j++)
-			printf("%f ", gsl_matrix_get ( &A.matrix , i, j) );
-	}		
-
-	printf("\n");
-
+	//C = gsl_vector_view_array(average, 5); 
+	
 	gsl_vector_fprintf ( stdout , & B.vector, "%f");
 
 	printf ( "%s %f\n ", "mychi2",  chi2f( myx, 10, 0) );
-
-       //return 1;
-
-
-			/*		
-	register float ** local_kernel   = (float **)calloc (5, sizeof(float*));
-	for(int i = 0 ; i < 5 ; i++)
-	{
-		local_kernel[i] = (float *)calloc (11, sizeof(float));
-		for (int j=0; j < 10 ; j++)
-			local_kernel[i][j] = kernel[i][j];
-
-
-
-		local_kernel[i][10] = average[i];
-	}
-*/
 
 	int loop=0;
 	for (loop=0; loop<100; loop++) {

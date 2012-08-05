@@ -101,6 +101,8 @@ int main (void)
 		gsl_monte_function G = { &expChi2f, DIM, 0   };
 
 		size_t calls = 500000;
+		size_t max_calls = 1500000;
+		size_t min_err = 0.30;
 
 		gsl_rng_env_setup ();
 
@@ -109,8 +111,7 @@ int main (void)
 
 		{
 			gsl_monte_ftk_state *s = gsl_monte_ftk_alloc (DIM);
-			gsl_monte_ftk_integrate (&G, xl, xu, DIM, calls, r, s, 
-					&res, &err);
+			gsl_monte_ftk_integrate (&G, xl, xu, DIM, calls, max_calls, min_err , r, s,	&res, &err);
 			gsl_monte_ftk_free (s);
 
             if(loop == 0)			

@@ -1,4 +1,4 @@
-g++ -c my_monte.c  -I gsl-1.14 -I.  -lgsl -lgslcblas 
+g++ -c my_monte.c -O2 -I gsl-1.14 -I.  -lgsl -lgslcblas 
 
 g++ -o monte_methods monte_methods.c my_monte.o -I gsl-1.14 -lgsl -lgslcblas 
 

@@ -113,7 +113,7 @@ gsl_monte_ftk_integrate_2 (const gsl_monte_function * f,
                          double min_err,
                          gsl_rng * r,
                          gsl_monte_ftk_state * state,
-                         double *result, double *abserr)
+                         size_t *steps_required, double *result, double *abserr)
 {
     double vol, m = 0, q = 0;
     double *x = state->x;

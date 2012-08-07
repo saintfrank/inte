@@ -69,12 +69,14 @@ double expChi2f (double *x, size_t dim, void *params){
 
     
 void
-display_results (const char *title, double result, double error)
+display_results (const char *title, double result, double error, size_t calls)
 {
   printf ("%s ==================\n", title);
   printf ("result = % .6f\n", result);
   printf ("sigma  = % .6f\n", error);
   printf ("error  = % .6f \n", error/result );
+  printf ("calls_used  = %d \n", calls );
+
 }
     
 
@@ -102,7 +104,8 @@ int main (void)
 
 		size_t calls = 500000;
 		size_t max_calls = 1500000;
-		size_t min_err = 0.30;
+		double min_err = 0.30;
+        size_t required_calls = 0;
 
 		gsl_rng_env_setup ();
 
@@ -111,11 +114,11 @@ int main (void)
 
 		{
 			gsl_monte_ftk_state *s = gsl_monte_ftk_alloc (DIM);
-			gsl_monte_ftk_integrate (&G, xl, xu, DIM, calls, max_calls, min_err , r, s,	&res, &err);
+			gsl_monte_ftk_integrate_2 (&G, xl, xu, DIM, calls, max_calls, min_err , r, s, &required_calls	,&res, &err);
 			gsl_monte_ftk_free (s);
 
             if(loop == 0)			
-			    display_results ("ftk", res, err);
+			    display_results ("ftk", res, err, required_calls);
 		}
 
 		/*{

@@ -56,6 +56,18 @@ gsl_monte_ftk_integrate (const gsl_monte_function * f,
                            gsl_monte_ftk_state * state,
                            double *result, double *abserr);
 
+int
+gsl_monte_ftk_integrate_2 (const gsl_monte_function * f,
+                         const double xl[], const double xu[],
+                         const size_t dim,
+                         const size_t calls,
+                         const size_t max_calls,
+                         double min_err,
+                         gsl_rng * r,
+                         gsl_monte_ftk_state * state,
+                         double *result, double *abserr);
+
+
 gsl_monte_ftk_state* gsl_monte_ftk_alloc(size_t dim);
 
 int gsl_monte_ftk_init(gsl_monte_ftk_state* state);

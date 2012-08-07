@@ -104,6 +104,84 @@ gsl_monte_ftk_integrate (const gsl_monte_function * f,
   return GSL_SUCCESS;
 }
 
+int
+gsl_monte_ftk_integrate_2 (const gsl_monte_function * f,
+                         const double xl[], const double xu[],
+                         const size_t dim,
+                         const size_t calls,
+                         const size_t max_calls,
+                         double min_err,
+                         gsl_rng * r,
+                         gsl_monte_ftk_state * state,
+                         double *result, double *abserr)
+{
+    double vol, m = 0, q = 0;
+    double *x = state->x;
+    size_t n, i;
+    
+    if (dim != state->dim)
+    {
+        GSL_ERROR ("number of dimensions must match allocated size", GSL_EINVAL);
+    }
+    
+    for (i = 0; i < dim; i++)
+    {
+        if (xu[i] <= xl[i])
+        {
+            GSL_ERROR ("xu must be greater than xl", GSL_EINVAL);
+        }
+        
+        if (xu[i] - xl[i] > GSL_DBL_MAX)
+        {
+            GSL_ERROR ("Range of integration is too large, please rescale",
+                       GSL_EINVAL);
+        }
+    }
+    
+    /* Compute the volume of the region */
+    
+    vol = 1;
+    
+    for (i = 0; i < dim; i++)
+    {
+        vol *= xu[i] - xl[i];
+    }
+    
+    for (n = 0; n < calls; n++)
+    {
+        /* Choose a random point in the integration region */
+        
+        for (i = 0; i < dim; i++)
+        {
+            x[i] = xl[i] + gsl_rng_uniform_pos (r) * (xu[i] - xl[i]);
+        }
+        
+        {
+            double fval = GSL_MONTE_FN_EVAL (f, x);
+            
+            /* recurrence for mean and variance */
+            
+            double d = fval - m;
+            m += d / (n + 1.0);
+            q += d * d * (n / (n + 1.0));
+        }
+    }
+    
+    *result = vol * m;
+    
+    if (calls < 2)
+    {
+        *abserr = GSL_POSINF;
+    }
+    else
+    {
+        *abserr = vol * sqrt (q / (calls * (calls - 1.0)));
+    }
+    
+    return GSL_SUCCESS;
+}
+
+
 gsl_monte_ftk_state *
 gsl_monte_ftk_alloc (size_t dim)
 {

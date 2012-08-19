@@ -1,9 +1,9 @@
-g++ -c my_monte.c -O2 -I gsl-1.14 -I.  -lgsl -lgslcblas 
+g++ -c my_monte.c -O2 -I gsl-1.14 -I.
 
-g++ -o monte_methods monte_methods.c my_monte.o -I gsl-1.14 -lgsl -lgslcblas 
+g++ -o monte_methods monte_methods.c my_monte.o -I gsl-1.14 -lgsl -lgslcblas
 
-g++ -o integrale integrale.c  -I gsl-1.14 -lgsl -lgslcblas -pg
+#g++ -o integrale integrale.c  -I gsl-1.14 -lgsl -lgslcblas -pg
 
-g++ -o normale normale.c  -I gsl-1.14 lib/lib/libgsl.a -lgslcblas -pg
+#g++ -o normale normale.c  -I gsl-1.14 lib/lib/libgsl.a -lgslcblas -pg
 
 #gcc -o Gauss10D Gauss10D.c  -I gsl-1.14 lib/lib/libgsl.a -pg

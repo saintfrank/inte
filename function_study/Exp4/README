@@ -1,0 +1,9 @@
+19 August 2012:
+
+- The grid side of the job is almost done. 
+- A first "follow" version of the monte carlo has been implemented.
+- Observation of the behaviour of such seem to show that using the "follwing" algorithm, 
+then the error of the integration decreases really slowly, BUT the result does seem to be very unstable. 
+While the results of different patterns of the same sub-region seem to be similar, with the "follow" algorithm
+the results have a __very high variance__.
+
